@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Інтерактивний тренажер — Підбір складових ПК</title>
+<style>
+  :root{
+    --blue:#0b63ce; --blue2:#13a0f5; --navy:#07306b;
+    --green:#13a84f; --red:#e53935; --yellow:#ffd72e;
+    --violet:#7a34e8; --bg:#eef7ff; --card:#ffffff;
+    --text:#10243e; --muted:#5f6f82; --line:#d8e8f7;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Arial,Helvetica,sans-serif; color:var(--text);
+    background:linear-gradient(135deg,#edf8ff,#f7f3ff);
+  }
+  .wrap{max-width:1180px;margin:auto;padding:18px}
+  header{
+    background:linear-gradient(90deg,var(--blue),#087dda,var(--navy));
+    color:white;border-radius:22px;padding:22px 26px;box-shadow:0 10px 28px rgba(20,75,130,.18);
+  }
+  header h1{margin:0;font-size:clamp(25px,4vw,44px);line-height:1.05}
+  header p{margin:10px 0 0;font-size:17px;opacity:.95}
+  .badge{
+    display:inline-block;background:var(--yellow);color:#092c62;font-weight:800;
+    padding:6px 12px;border-radius:999px;margin-bottom:10px
+  }
+  .panel{
+    background:var(--card);border:1px solid var(--line);border-radius:20px;
+    padding:18px;margin-top:16px;box-shadow:0 8px 22px rgba(42,86,130,.08)
+  }
+  h2{margin:0 0 14px;color:#084f9f}
+  .scenarios{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .scenario{
+    border:2px solid #cfe5fb;background:#f8fcff;border-radius:16px;padding:14px;
+    cursor:pointer;min-height:108px;text-align:left;transition:.2s;
+  }
+  .scenario:hover{transform:translateY(-2px);border-color:#73b8f2}
+  .scenario.selected{border-color:var(--blue);background:#e9f4ff;box-shadow:0 0 0 3px rgba(11,99,206,.10)}
+  .scenario strong{display:block;font-size:18px;margin-bottom:5px}
+  .scenario span{color:var(--muted);font-size:14px;line-height:1.35}
+  .icon{font-size:28px;margin-bottom:6px}
+  .task{
+    border-left:6px solid var(--yellow);background:#fffced;border-radius:12px;
+    padding:12px 14px;margin:14px 0 0;line-height:1.45
+  }
+  .builder{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .component{
+    border:1px solid var(--line);border-radius:16px;padding:14px;background:#fbfdff
+  }
+  .component h3{margin:0 0 10px;color:#183d69}
+  select{
+    width:100%;padding:12px;border:2px solid #cfe2f4;border-radius:12px;
+    font-size:16px;background:white;color:#15324f
+  }
+  select:focus{outline:3px solid rgba(13,115,215,.18);border-color:var(--blue)}
+  .hint{font-size:13px;color:var(--muted);margin-top:7px;min-height:34px}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+  button{
+    border:0;border-radius:12px;padding:12px 18px;font-size:16px;font-weight:800;
+    cursor:pointer;min-height:44px
+  }
+  .primary{background:linear-gradient(90deg,var(--blue),var(--blue2));color:white}
+  .secondary{background:#edf4fb;color:#174875}
+  .next{background:linear-gradient(90deg,#15a64e,#35c56d);color:white}
+  .result{display:none;margin-top:16px;border-radius:18px;padding:16px}
+  .result.good{display:block;background:#ecfff3;border:2px solid #87dfaa}
+  .result.mid{display:block;background:#fff9e8;border:2px solid #f3cf68}
+  .result.bad{display:block;background:#fff0f0;border:2px solid #f0a0a0}
+  .score{font-size:30px;font-weight:900}
+  .checks{display:grid;gap:8px;margin-top:10px}
+  .check{
+    background:white;border-radius:10px;padding:9px 11px;border:1px solid rgba(0,0,0,.07)
+  }
+  .ok{color:#0c8d3d;font-weight:800}
+  .no{color:#c52d2d;font-weight:800}
+  .progressbox{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:15px}
+  .bar{flex:1;height:14px;background:#dceaf6;border-radius:999px;overflow:hidden}
+  .bar > div{height:100%;width:0;background:linear-gradient(90deg,#0c8bdc,#22b866);transition:.25s}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+  .stat{background:#f6faff;border:1px solid var(--line);border-radius:13px;padding:11px;text-align:center}
+  .stat b{display:block;font-size:23px;color:#0b61c4}
+  .mini{font-size:13px;color:var(--muted)}
+  .teacher{margin-top:16px;background:#f5f0ff;border:1px solid #dfd3fa;border-radius:14px;padding:12px}
+  .footer{padding:18px 4px;color:#617488;font-size:13px;text-align:center}
+  @media(max-width:800px){
+    .scenarios{grid-template-columns:1fr 1fr}
+    .builder{grid-template-columns:1fr}
+  }
+  @media(max-width:520px){
+    .scenarios{grid-template-columns:1fr}
+    .stats{grid-template-columns:1fr}
+    header{padding:18px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="badge">Інформатика • 8 клас НУШ</div>
+    <h1>🖥️ Інтерактивний тренажер<br>«Підбери складові ПК»</h1>
+    <p>Обери призначення комп’ютера, склади конфігурацію та перевір, наскільки вдало підібрані компоненти.</p>
+  </header>
+
+  <section class="panel">
+    <h2>1. Обери призначення комп’ютера</h2>
+    <div class="scenarios" id="scenarios"></div>
+    <div class="task" id="task">Оберіть один із варіантів, щоб отримати завдання.</div>
+  </section>
+
+  <section class="panel">
+    <h2>2. Склади конфігурацію</h2>
+    <div class="builder">
+      <div class="component">
+        <h3>🧠 Процесор (CPU)</h3>
+        <select id="cpu"></select>
+        <div class="hint">CPU виконує команди програм і обчислення.</div>
+      </div>
+      <div class="component">
+        <h3>⚡ Оперативна пам’ять (RAM)</h3>
+        <select id="ram"></select>
+        <div class="hint">RAM зберігає дані, які потрібні комп’ютеру зараз.</div>
+      </div>
+      <div class="component">
+        <h3>💾 Накопичувач</h3>
+        <select id="storage"></select>
+        <div class="hint">Накопичувач відповідає за довготривале зберігання файлів.</div>
+      </div>
+      <div class="component">
+        <h3>🎮 Відеокарта (GPU)</h3>
+        <select id="gpu"></select>
+        <div class="hint">GPU особливо важлива для 3D, ігор, відеомонтажу та графіки.</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" id="checkBtn">✅ Перевірити конфігурацію</button>
+      <button class="secondary" id="resetBtn">↻ Скинути вибір</button>
+      <button class="next" id="randomBtn">🎲 Випадкове завдання</button>
+    </div>
+
+    <div id="result" class="result" aria-live="polite"></div>
+  </section>
+
+  <section class="panel">
+    <h2>3. Твій прогрес</h2>
+    <div class="progressbox">
+      <div class="bar"><div id="barFill"></div></div>
+      <strong id="progressLabel">0 / 6</strong>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="attempts">0</b><span class="mini">перевірок</span></div>
+      <div class="stat"><b id="best">0%</b><span class="mini">найкращий результат</span></div>
+      <div class="stat"><b id="solved">0</b><span class="mini">завдань виконано</span></div>
+    </div>
+    <div class="teacher">
+      <b>💡 Порада:</b> найпотужніший ПК не завжди є найкращим вибором.
+      Правильна конфігурація має відповідати завданню та бути збалансованою.
+    </div>
+  </section>
+
+  <div class="footer">Тренажер працює автономно в браузері. Результати зберігаються лише під час відкриття цієї сторінки.</div>
+</div>
+
+<script>
+(function(){
+  const scenarios = [
+    {
+      id:"office", icon:"📄", title:"Офісна робота",
+      desc:"Документи, таблиці, браузер, відеозв’язок.",
+      task:"Підбери недорогу, але комфортну конфігурацію для Word, Excel, браузера, Teams/Meet та роботи з навчальними матеріалами.",
+      need:{cpu:1,ram:1,storage:1,gpu:0},
+      note:"Для офісних завдань дискретна відеокарта зазвичай не потрібна."
+    },
+    {
+      id:"study", icon:"🎓", title:"Навчання і програмування",
+      desc:"Браузер, Python, презентації, IDE, відеоуроки.",
+      task:"Комп’ютер потрібен учневі для навчання, програмування Python, презентацій, браузера та відеоуроків.",
+      need:{cpu:1,ram:1,storage:1,gpu:0},
+      note:"Головне — достатня RAM і швидкий SSD."
+    },
+    {
+      id:"video", icon:"🎬", title:"Монтаж відео",
+      desc:"Редагування Full HD/4K, ефекти, рендеринг.",
+      task:"Потрібна робоча станція для відеомонтажу, ефектів і рендерингу. Важливі CPU, RAM, швидкий SSD та продуктивна GPU.",
+      need:{cpu:3,ram:3,storage:3,gpu:3},
+      note:"Відеомонтаж потребує збалансованої потужної системи."
+    },
+    {
+      id:"cad", icon:"📐", title:"Проєктування і 3D",
+      desc:"FreeCAD, Blender, CAD, 3D-моделювання.",
+      task:"Підбери ПК для креслення, 3D-моделювання, FreeCAD/Blender та інженерних програм.",
+      need:{cpu:3,ram:2,storage:2,gpu:3},
+      note:"Для 3D важливі сильні CPU та GPU, а також достатня RAM."
+    },
+    {
+      id:"gaming", icon:"🎮", title:"Сучасні ігри",
+      desc:"Висока частота кадрів, складна 3D-графіка.",
+      task:"Потрібен ігровий ПК для сучасних 3D-ігор у Full HD/1440p.",
+      need:{cpu:2,ram:2,storage:2,gpu:3},
+      note:"Для ігор особливо важлива дискретна відеокарта."
+    },
+    {
+      id:"basic", icon:"🌐", title:"Домашній базовий ПК",
+      desc:"Інтернет, відео, документи, фото.",
+      task:"Підбери економну конфігурацію для домашнього використання: браузер, YouTube, документи та фотографії.",
+      need:{cpu:1,ram:1,storage:1,gpu:0},
+      note:"Для простих домашніх завдань надлишкова потужність не потрібна."
+    }
+  ];
+
+  const opts = {
+    cpu:[
+      ["", "— Оберіть процесор —",0],
+      ["cpu1","4 ядра, базовий сучасний CPU",1],
+      ["cpu2","6 ядер, середній клас",2],
+      ["cpu3","8–12 ядер, продуктивний CPU",3]
+    ],
+    ram:[
+      ["","— Оберіть RAM —",0],
+      ["ram1","8 ГБ",1],
+      ["ram2","16 ГБ",2],
+      ["ram3","32 ГБ або більше",3]
+    ],
+    storage:[
+      ["","— Оберіть накопичувач —",0],
+      ["st1","SSD 256–512 ГБ",1],
+      ["st2","SSD 1 ТБ",2],
+      ["st3","Швидкий NVMe SSD 1–2 ТБ",3],
+      ["st0","Лише HDD",0]
+    ],
+    gpu:[
+      ["","— Оберіть графіку —",-1],
+      ["gpu0","Вбудована графіка",0],
+      ["gpu1","Базова дискретна відеокарта",1],
+      ["gpu2","Середня дискретна відеокарта",2],
+      ["gpu3","Потужна дискретна відеокарта",3]
+    ]
+  };
+
+  const $ = id => document.getElementById(id);
+  let active = null, attempts=0, best=0;
+  const solvedSet = new Set();
+
+  function fillSelect(id){
+    const s=$(id);
+    s.innerHTML="";
+    opts[id].forEach(o=>{
+      const op=document.createElement("option");
+      op.value=o[0]; op.textContent=o[1]; op.dataset.level=o[2];
+      s.appendChild(op);
+    });
+  }
+  ["cpu","ram","storage","gpu"].forEach(fillSelect);
+
+  const scenariosEl=$("scenarios");
+  scenarios.forEach(sc=>{
+    const b=document.createElement("button");
+    b.type="button"; b.className="scenario"; b.dataset.id=sc.id;
+    b.innerHTML='<div class="icon">'+sc.icon+'</div><strong>'+sc.title+'</strong><span>'+sc.desc+'</span>';
+    b.addEventListener("click",()=>selectScenario(sc.id));
+    scenariosEl.appendChild(b);
+  });
+
+  function selectScenario(id){
+    active=scenarios.find(s=>s.id===id);
+    document.querySelectorAll(".scenario").forEach(b=>b.classList.toggle("selected",b.dataset.id===id));
+    $("task").innerHTML="<b>Завдання:</b> "+active.task;
+    $("result").className="result";
+    $("result").innerHTML="";
+  }
+
+  function level(id){
+    const sel=$(id);
+    const op=sel.options[sel.selectedIndex];
+    return Number(op.dataset.level);
+  }
+
+  function evaluateComponent(name,label,need,actual){
+    if(actual < 0) return {ok:false,score:0,text:label+": не обрано."};
+    const diff=actual-need;
+    if(diff < 0){
+      return {ok:false,score:0,text:label+": недостатня продуктивність для цього завдання."};
+    }
+    if(diff===0){
+      return {ok:true,score:25,text:label+": вдалий і збалансований вибір."};
+    }
+    if(diff===1){
+      return {ok:true,score:20,text:label+": підійде, але має невеликий запас потужності."};
+    }
+    return {ok:true,score:15,text:label+": працюватиме, але це надлишкова конфігурація для цього завдання."};
+  }
+
+  function check(){
+    if(!active){
+      $("result").className="result bad";
+      $("result").innerHTML="<b>Спочатку оберіть призначення комп’ютера.</b>";
+      return;
+    }
+    if(!$("cpu").value || !$("ram").value || !$("storage").value || !$("gpu").value){
+      $("result").className="result bad";
+      $("result").innerHTML="<b>Оберіть усі 4 складові ПК.</b>";
+      return;
+    }
+
+    attempts++;
+    const checks=[
+      evaluateComponent("cpu","Процесор",active.need.cpu,level("cpu")),
+      evaluateComponent("ram","Оперативна пам’ять",active.need.ram,level("ram")),
+      evaluateComponent("storage","Накопичувач",active.need.storage,level("storage")),
+      evaluateComponent("gpu","Відеокарта",active.need.gpu,level("gpu"))
+    ];
+    const score=checks.reduce((a,c)=>a+c.score,0);
+    best=Math.max(best,score);
+    const allEnough=checks.every(c=>c.ok);
+
+    if(score>=85 && allEnough) solvedSet.add(active.id);
+
+    const cls=score>=85&&allEnough?"good":score>=60?"mid":"bad";
+    const title=score>=85&&allEnough?"🎉 Чудова конфігурація!":
+                score>=60?"🙂 Майже вдало. Є що покращити.":"🔧 Конфігурацію потрібно переглянути.";
+    $("result").className="result "+cls;
+    $("result").innerHTML=
+      '<div class="score">'+score+' / 100</div>'+
+      '<h3>'+title+'</h3>'+
+      '<div class="checks">'+checks.map(c=>'<div class="check"><span class="'+(c.ok?'ok':'no')+'">'+(c.ok?'✓':'✗')+'</span> '+c.text+'</div>').join("")+'</div>'+
+      '<p><b>Підказка:</b> '+active.note+'</p>';
+
+    $("attempts").textContent=attempts;
+    $("best").textContent=best+"%";
+    $("solved").textContent=solvedSet.size;
+    $("progressLabel").textContent=solvedSet.size+" / "+scenarios.length;
+    $("barFill").style.width=(solvedSet.size/scenarios.length*100)+"%";
+  }
+
+  function reset(){
+    ["cpu","ram","storage","gpu"].forEach(id=>$(id).selectedIndex=0);
+    $("result").className="result"; $("result").innerHTML="";
+  }
+
+  function randomScenario(){
+    const sc=scenarios[Math.floor(Math.random()*scenarios.length)];
+    selectScenario(sc.id); reset();
+    document.querySelector('[data-id="'+sc.id+'"]').scrollIntoView({behavior:"smooth",block:"center"});
+  }
+
+  $("checkBtn").addEventListener("click",check);
+  $("resetBtn").addEventListener("click",reset);
+  $("randomBtn").addEventListener("click",randomScenario);
+
+  selectScenario("office");
+})();
+</script>
+</body>
+</html>
