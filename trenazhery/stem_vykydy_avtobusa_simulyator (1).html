@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STEM-дослідження: питомі викиди автобуса</title>
+<style>
+:root{color-scheme:light;--navy:#173451;--teal:#087d83;--light:#e9f7f6;--ink:#1b3045;--muted:#5c6d7b;--orange:#f3ab4b;--line:#dce7eb}
+*{box-sizing:border-box}body{margin:0;background:#f3f7fa;color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}.wrap{max-width:1110px;margin:0 auto;padding:26px 20px 45px}.head{background:linear-gradient(112deg,#183b5b,#087f83);color:white;border-radius:22px;padding:30px 34px;box-shadow:0 12px 32px #123b5824}.eyebrow{font-size:.8rem;letter-spacing:.11em;font-weight:800;text-transform:uppercase;color:#c3fbec}.head h1{margin:8px 0;font-size:clamp(1.65rem,3vw,2.55rem);line-height:1.15}.head p{margin:8px 0 0;color:#e7f7fc}.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,.9fr);gap:20px;margin-top:22px}.panel{border:1px solid var(--line);border-radius:20px;background:#fff;padding:24px;box-shadow:0 6px 25px #2340540d}.panel h2{font-size:1.17rem;margin:0 0 20px;color:var(--navy)}.control{margin:0 0 28px}.control:last-of-type{margin-bottom:15px}.control-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:9px}.control label{font-weight:700}.number{display:flex;align-items:center;gap:5px;white-space:nowrap}.number input{font-size:1.12rem;font-weight:800;color:var(--navy);width:85px;text-align:right;border:1px solid #bacfd4;border-radius:9px;padding:6px 8px;background:#fff}.number span{font-size:.88rem;color:var(--muted)}input[type=range]{width:100%;accent-color:var(--teal);cursor:pointer;height:25px}.range-ends{display:flex;justify-content:space-between;color:var(--muted);font-size:.75rem;margin-top:-4px}.hint{font-size:.82rem;color:var(--muted);margin:5px 0 0}.actions{display:flex;flex-wrap:wrap;gap:8px}.btn{background:var(--teal);color:white;border:none;border-radius:11px;padding:10px 15px;font:inherit;font-weight:700;cursor:pointer}.btn.secondary{background:#e7f2f3;color:#095f64}.btn:hover{filter:brightness(.94)}.result{background:var(--light);border:1px solid #b9e8e1;text-align:center;border-radius:16px;padding:18px 12px;margin:0 0 18px}.result .small{color:#145d63;font-weight:800}.big{font-size:clamp(3.3rem,7vw,5.4rem);line-height:1.05;color:#08777d;font-weight:850;letter-spacing:-.04em;margin:8px 0 2px;font-variant-numeric:tabular-nums}.units{font-weight:750;color:#165d61}.formula{background:#f6f8fa;border-radius:12px;padding:13px 16px;text-align:center;font-size:1.05rem;font-weight:650;overflow-wrap:anywhere}.formula span{display:block;font-weight:400;color:var(--muted);font-size:.82rem;margin-top:4px}.notice{border-left:4px solid var(--orange);padding:9px 13px;margin-top:16px;background:#fffbf3;color:#604b2c;font-size:.88rem;border-radius:0 9px 9px 0}.below{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:20px}.chartwrap{width:100%;min-height:235px}.chartwrap svg{width:100%;height:auto;display:block}.choice{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.choice button{border:1px solid #c5d8dc;border-radius:18px;background:#fff;color:#1c5860;font:inherit;font-size:.86rem;padding:6px 12px;cursor:pointer}.choice button[aria-pressed=true]{background:#087d83;color:white;border-color:#087d83}.question{margin:0 0 13px}.answer{margin-top:12px;padding:13px;background:#eaf6f4;border-radius:10px;display:none}.answer.show{display:block}.foot{text-align:center;font-size:.8rem;color:var(--muted);margin-top:22px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@media(max-width:800px){.grid,.below{grid-template-columns:1fr}.head{padding:25px}.panel{padding:19px}}@media(max-width:450px){.control-top{align-items:flex-start}.control label{max-width:55%}.wrap{padding:12px}.head{border-radius:16px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="head">
+<div class="eyebrow">Інтерактивне STEM-дослідження</div>
+<h1>Як змінюються питомі викиди автобуса?</h1>
+<p>Змінюйте кількість пасажирів, відстань та загальні викиди за маршрут. Спостерігайте за результатом і сформулюйте висновок.</p>
+</header>
+<section class="grid" aria-label="Інтерактивна модель">
+<div class="panel">
+<h2>Параметри маршруту</h2>
+<div class="control">
+ <div class="control-top"><label for="pass">Кількість пасажирів</label><div class="number"><input id="passNum" type="number" min="1" max="100" value="25" aria-label="Кількість пасажирів, числове поле"><span>осіб</span></div></div>
+ <input id="pass" type="range" min="1" max="100" step="1" value="25"><div class="range-ends"><span>1</span><span>100</span></div>
+</div>
+<div class="control">
+ <div class="control-top"><label for="distance">Відстань маршруту</label><div class="number"><input id="distanceNum" type="number" min="1" max="200" value="50" aria-label="Відстань, числове поле"><span>км</span></div></div>
+ <input id="distance" type="range" min="1" max="200" step="1" value="50"><div class="range-ends"><span>1 км</span><span>200 км</span></div>
+</div>
+<div class="control">
+ <div class="control-top"><label for="emissions">Загальні викиди за маршрут</label><div class="number"><input id="emissionsNum" type="number" min="1" max="200" value="50" aria-label="Загальні викиди, числове поле"><span>кг</span></div></div>
+ <input id="emissions" type="range" min="1" max="200" step="1" value="50"><div class="range-ends"><span>1 кг</span><span>200 кг</span></div>
+</div>
+<div class="actions"><button class="btn" id="reset" type="button">↺ Початкові значення</button><button class="btn secondary" id="save" type="button">Зберегти спостереження</button></div>
+</div>
+<div class="panel">
+<h2>Результат дослідження</h2>
+<div class="result" role="status" aria-live="polite" aria-atomic="true"><div class="small">Питомі викиди</div><div class="big" id="result">40</div><div class="units">г CO₂-екв./(пас.·км)</div></div>
+<div class="formula" id="formula">(50 × 1000) / (25 × 50) = 40 <span>Загальні викиди, г ÷ (пасажири × відстань, км)</span></div>
+<div class="notice"><strong>Навчальна модель.</strong> Усі три параметри задаються незалежно. Модель не прогнозує реальну витрату палива та викиди автобуса в разі зміни кількості пасажирів або відстані. Для порівняння впливу одного параметра залишайте два інші незмінними.</div>
+</div>
+</section>
+<section class="below">
+<div class="panel">
+<h2>Графік: як впливає кількість пасажирів?</h2>
+<p class="hint">Відстань і загальні викиди фіксовані на поточних значеннях. Точка позначає обрану кількість пасажирів.</p>
+<div id="graph" class="chartwrap" role="img" aria-label="Графік питомих викидів залежно від кількості пасажирів"></div>
+</div>
+<div class="panel">
+<h2>Проведіть експеримент</h2>
+<p class="question"><strong>1.</strong> Установіть 25 пасажирів, 50 км і 50 кг. Скільки становлять питомі викиди?</p>
+<p class="question"><strong>2.</strong> Збільште кількість пасажирів до 50, не змінюючи інших параметрів. Як зміниться результат?</p>
+<p class="question"><strong>3.</strong> Поверніть початкові значення. Збільште загальні викиди до 100 кг. Що відбудеться?</p>
+<p class="question"><strong>4.</strong> Чому не можна за цією моделлю стверджувати, що реальний автобус за 100 км викине стільки ж CO₂-екв., скільки за 50 км?</p>
+<button type="button" class="btn secondary" id="showAnswer" aria-expanded="false">Показати орієнтовні висновки</button>
+<div class="answer" id="answer"><strong>Орієнтовні висновки:</strong> 1) 40 г/(пас.·км); 2) зменшаться вдвічі — до 20 г/(пас.·км); 3) зростуть удвічі — до 80 г/(пас.·км); 4) у цій навчальній моделі загальні викиди вводяться вручну й не пов’язані автоматично з відстанню чи завантаженістю автобуса.</div>
+</div>
+</section>
+<p class="foot">STEM • Екологія транспорту • Математична модель питомих викидів</p>
+</main>
+<script>
+(function(){
+'use strict';
+const names=['pass','distance','emissions'];
+const defaults={pass:25,distance:50,emissions:50};
+const bounds={pass:[1,100],distance:[1,200],emissions:[1,200]};
+const $=id=>document.getElementById(id);
+const fmt=n=>Number(n.toFixed(2)).toLocaleString('uk-UA',{maximumFractionDigits:2});
+function get(id){return Number($(id).value)};
+function update(){
+ const p=get('pass'),d=get('distance'),e=get('emissions'),val=e*1000/(p*d);
+ $('result').textContent=fmt(val);
+ $('formula').innerHTML=`(${e} × 1000) / (${p} × ${d}) = ${fmt(val)}<span>Загальні викиди, г ÷ (пасажири × відстань, км)</span>`;
+ draw(p,d,e);
+}
+function set(id,val){const [min,max]=bounds[id];val=Math.max(min,Math.min(max,Math.round(Number(val)||min)));$(id).value=val;$(id+'Num').value=val;update();}
+for(const id of names){$(id).addEventListener('input',()=>set(id,$(id).value));$(id+'Num').addEventListener('input',()=>{const raw=$(id+'Num').value;if(raw!==''&&Number.isFinite(Number(raw)))set(id,raw)});$(id+'Num').addEventListener('change',()=>set(id,$(id+'Num').value));}
+$('reset').addEventListener('click',()=>{names.forEach(id=>{$(id).value=defaults[id];$(id+'Num').value=defaults[id]});update()});
+$('save').addEventListener('click',()=>{const p=get('pass'),d=get('distance'),e=get('emissions'),v=fmt(e*1000/(p*d));const csv='Пасажири;Відстань (км);Загальні викиди (кг CO2-екв.);Питомі викиди (г CO2-екв./пас.·км)\n'+[p,d,e,v].join(';')+'\n';const a=document.createElement('a'),url=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.href=url;a.download='stem_sposterezhennia_avtobus.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});
+$('showAnswer').addEventListener('click',()=>{const on=$('answer').classList.toggle('show');$('showAnswer').setAttribute('aria-expanded',String(on));$('showAnswer').textContent=on?'Сховати висновки':'Показати орієнтовні висновки'});
+function draw(p,d,e){
+ const W=600,H=280,L=63,R=20,T=18,B=55,plotW=W-L-R,plotH=H-T-B;
+ const maxX=100,yMax=e*1000/d,displayMax=Math.max(80,Math.ceil(yMax/50)*50);
+ const x=n=>L+(n-1)/99*plotW,y=n=>T+plotH-(n/displayMax)*plotH;
+ let s=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">`;
+ for(let i=0;i<=4;i++){const v=displayMax*i/4;const yy=y(v);s+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#e0e8ed"/><text x="${L-10}" y="${yy+4}" text-anchor="end" font-size="12" fill="#617487">${fmt(v)}</text>`}
+ for(const n of [1,25,50,75,100]){const xx=x(n);s+=`<text x="${xx}" y="${H-B+21}" text-anchor="middle" font-size="12" fill="#617487">${n}</text>`}
+ const pts=[];for(let n=1;n<=100;n++)pts.push(`${x(n).toFixed(1)},${y(e*1000/(n*d)).toFixed(1)}`);
+ s+=`<polyline points="${pts.join(' ')}" fill="none" stroke="#09878b" stroke-width="3" stroke-linejoin="round"/><line x1="${x(p)}" y1="${T}" x2="${x(p)}" y2="${H-B}" stroke="#e5a13c" stroke-dasharray="5 5"/><circle cx="${x(p)}" cy="${y(e*1000/(p*d))}" r="7" fill="#e79b34" stroke="white" stroke-width="3"/><text x="${W/2}" y="${H-8}" text-anchor="middle" font-size="13" fill="#34566b">Кількість пасажирів, осіб</text><text x="18" y="${H/2}" transform="rotate(-90 18 ${H/2})" text-anchor="middle" font-size="13" fill="#34566b">г CO₂-екв./(пас.·км)</text></svg>`;
+ $('graph').innerHTML=s;
+ $('graph').setAttribute('aria-label',`Графік залежності питомих викидів від кількості пасажирів. Для ${p} пасажирів: ${fmt(e*1000/(p*d))} грамів CO₂-еквіваленту на пасажиро-кілометр.`)
+}
+update();
+})();
+</script>
+</body>
+</html>
